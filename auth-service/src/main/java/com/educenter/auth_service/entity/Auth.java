@@ -1,5 +1,6 @@
 package com.educenter.auth_service.entity;
 
+import com.educenter.auth_service.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,12 +30,14 @@ public class Auth implements UserDetails {
 
     private String password;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private Role role;
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
     }
 
     @Override

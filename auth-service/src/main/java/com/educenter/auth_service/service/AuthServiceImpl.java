@@ -3,6 +3,7 @@ package com.educenter.auth_service.service;
 import com.educenter.auth_service.dto.AuthRegisterDTO;
 import com.educenter.auth_service.dto.UserProfileDTO;
 import com.educenter.auth_service.entity.Auth;
+import com.educenter.auth_service.enums.Role;
 import com.educenter.auth_service.repository.AuthRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -45,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
         auth.setUsername(dto.getUsername());
         auth.setEmail(dto.getEmail());
         auth.setPassword(passwordEncoder.encode(dto.getPassword()));
-        auth.setRole("USER");
+        auth.setRole(Role.STUDENT);
 
         Auth savedUser = authRepository.save(auth);
 

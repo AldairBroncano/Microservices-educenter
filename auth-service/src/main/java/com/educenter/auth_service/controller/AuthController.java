@@ -5,6 +5,7 @@ import com.educenter.auth_service.dto.AuthResponseDTO;
 import com.educenter.auth_service.dto.AuthRegisterDTO;
 import com.educenter.auth_service.dto.UserProfileDTO;
 import com.educenter.auth_service.entity.Auth;
+import com.educenter.auth_service.enums.Role;
 import com.educenter.auth_service.mapper.AuthMapper;
 import com.educenter.auth_service.security.JwtProvider;
 import com.educenter.auth_service.service.AuthService;
@@ -46,7 +47,7 @@ public class AuthController {
     public ResponseEntity<AuthResponseDTO> registerUser(@RequestBody AuthRegisterDTO userDTO){
         Auth auth = AuthMapper.toEntity(userDTO);
         auth.setPassword(passwordEncoder.encode(auth.getPassword()));
-        auth.setRole("USER");
+        auth.setRole(Role.STUDENT);
         Auth savedAuth = authService.saveUser(auth);
 
         return ResponseEntity.ok(AuthMapper.toDTO(savedAuth));
