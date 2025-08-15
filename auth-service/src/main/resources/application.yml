@@ -10,15 +10,26 @@ spring:
     password: sql
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
 logging:
   level:
     org:
       springframework:
         security: DEBUG
+jwt:
+  secret: YbRKhIA0MAAUQtdZSHltsCpK6Hkheav3FAzE3y7Uvns9ZpMeBxgTi4wKeQld6SmgP
+  expiration: 1500000  # 25 minutos en milisegundos
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+
+user:
+  service:
+    url: http://localhost:8082
