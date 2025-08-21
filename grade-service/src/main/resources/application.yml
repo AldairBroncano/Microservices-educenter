@@ -1,0 +1,16 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: grade-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/grade_db?serverTimezone=UTC
+    username: root
+    password: sql
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true

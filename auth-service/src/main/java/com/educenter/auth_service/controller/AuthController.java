@@ -98,6 +98,9 @@ public class AuthController {
 
             Auth auth = optionalUser.get();
 
+
+
+
             // 📦 Armar la respuesta
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Login exitoso");

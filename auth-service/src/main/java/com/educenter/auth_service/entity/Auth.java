@@ -40,9 +40,11 @@ public class Auth implements UserDetails {
         return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
     }
 
+
+
     @Override
     public String getUsername() {
-        return this.email; //
+        return email;
     }
 
 

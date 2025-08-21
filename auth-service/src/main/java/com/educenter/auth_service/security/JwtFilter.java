@@ -30,6 +30,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
 
 
+
+
+
+
         // 🔐 Validar JWT si hay Authorization header
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
