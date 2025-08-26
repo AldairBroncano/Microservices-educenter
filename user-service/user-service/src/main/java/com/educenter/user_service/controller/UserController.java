@@ -4,8 +4,11 @@ import com.educenter.user_service.dto.UserFullProfileDTO;
 import com.educenter.user_service.dto.UserProfileDTO;
 import com.educenter.user_service.entity.User;
 import com.educenter.user_service.repository.UserRepository;
+import com.educenter.user_service.security.TokenContextHolder;
 import com.educenter.user_service.service.UserService;
+import com.educenter.user_service.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,13 +22,39 @@ public class UserController {
 
     private final UserRepository repository;
     private final UserService service;
+    private final JwtProvider jwtProvider;
 
-@PostMapping("/crear")
-public ResponseEntity<User> crearPerfil(@RequestBody User user){
-    System.out.println("LastName recibido: " + user.getLastName());
-    User saved = service.guardar(user);
-    return ResponseEntity.ok(saved);
-}
+    @PostMapping("/crear")
+    public ResponseEntity<User> crearPerfil(@RequestBody User user) {
+
+        // Obtener token desde TokenContextHolder (ya lo guardó tu filter)
+        String token = TokenContextHolder.getToken();
+
+        if (token == null || !token.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Limpiar token (quitar "Bearer ")
+        String cleanToken = token.replace("Bearer ", "");
+
+        // Extraer ID del token usando tu JwtProvider (instancia, no static)
+        Long userId = jwtProvider.extractUserId(cleanToken);
+
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Asignar ID automáticamente (ignorar el que mande el cliente)
+        user.setId(userId);
+
+        System.out.println("LastName recibido: " + user.getLastName());
+        System.out.println("UserId extraído del token: " + userId);
+
+        User saved = service.guardar(user);
+        return ResponseEntity.ok(saved);
+    }
+
+
 
     @GetMapping("/{id}")
     public ResponseEntity<User> obtener(@PathVariable Long id) {

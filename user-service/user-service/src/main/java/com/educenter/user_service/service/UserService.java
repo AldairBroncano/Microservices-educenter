@@ -5,8 +5,11 @@ import com.educenter.user_service.dto.UserProfileDTO;
 import com.educenter.user_service.entity.User;
 import com.educenter.user_service.feign.AuthFeignClient;
 import com.educenter.user_service.repository.UserRepository;
+
+import com.educenter.user_service.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +22,16 @@ public class UserService {
     private final UserRepository repository;
     private final AuthFeignClient authFeignClient;
 
+    private final JwtProvider jwtProvider;
+
+
+
+    public void ejemplo(String token) {
+        Long userId = jwtProvider.extractUserId(token);
+        System.out.println("ID extraído: " + userId);
+    }
+
+@Transactional
 public User guardar(User user){
     System.out.println("LastName recibido en Service: " + user.getLastName());
     return repository.save(user);
@@ -44,15 +57,19 @@ public UserProfileDTO obternerPerfilDesdeAuth(Long id){
     public List<UserFullProfileDTO> getAllFullProfiles() {
         return repository.findAll().stream()
                 .map(userInfo -> {
-                    // Llamada al auth-service
-                    UserProfileDTO authData = authFeignClient.getUserById(userInfo.getId());
+                    UserProfileDTO authData = null;
 
-                    // Combinar datos en el DTO final
+                    try {
+                        authData = authFeignClient.getUserById(userInfo.getId());
+                    } catch (Exception e) {
+                        System.out.println("No se pudo obtener datos desde Auth para ID: " + userInfo.getId());
+                    }
+
                     UserFullProfileDTO dto = new UserFullProfileDTO();
                     dto.setId(userInfo.getId());
-                    dto.setUsername(authData.getUsername());
-                    dto.setEmail(authData.getEmail());
-                //    dto.setRole(authData.getRole());
+                    dto.setUsername(authData != null ? authData.getUsername() : null);
+                    dto.setEmail(authData != null ? authData.getEmail() : null);
+                    // dto.setRole(authData != null ? authData.getRole() : null);
                     dto.setName(userInfo.getName());
                     dto.setLastName(userInfo.getLastName());
                     dto.setFechaNacimiento(userInfo.getFechaNacimiento());
@@ -63,6 +80,7 @@ public UserProfileDTO obternerPerfilDesdeAuth(Long id){
                 })
                 .toList();
     }
+
 
 
 }

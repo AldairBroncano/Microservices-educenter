@@ -86,8 +86,6 @@ public class AuthController {
             // Obtener el usuario autenticado (UserDetails)
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-            // 🔐 Generar el token JWT
-            String token = jwtProvider.generateToken(userDetails.getUsername()); // username = email
 
             // Buscar datos extra si necesitas más que el email (como username o role)
             Optional<Auth> optionalUser = authService.getUserByEmail(userDetails.getUsername());
@@ -99,12 +97,15 @@ public class AuthController {
             Auth auth = optionalUser.get();
 
 
+// 🔐 Generar el token JWT
+            String token = jwtProvider.generateToken(userDetails.getUsername() , auth.getId()); // username = email
 
 
             // 📦 Armar la respuesta
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Login exitoso");
             response.put("token", token);
+            response.put("userId", auth.getId());
             response.put("email", auth.getEmail());
             response.put("username", auth.getUsername());
             response.put("role", auth.getRole());

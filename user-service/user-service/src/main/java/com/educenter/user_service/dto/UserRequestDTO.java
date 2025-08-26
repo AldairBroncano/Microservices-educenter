@@ -1,26 +1,20 @@
-package com.educenter.user_service.entity;
+package com.educenter.user_service.dto;
 
-
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-
-@Entity
-@Table(name = "usuarios_info")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class UserRequestDTO {
 
-    @Id
-
-    private Long id; // Mismo que auth
+     // Mismo que auth
     private String name;
-
     @Column(name = "last_name")
     private String lastName;
     @Column(name = "fecha_nacimiento")
@@ -28,9 +22,5 @@ public class User {
     private String phone;
     @Column(name = "profile_phone")
     private String profilePhone;
-
-
-
-
 
 }
