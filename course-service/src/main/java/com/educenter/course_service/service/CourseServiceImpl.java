@@ -37,4 +37,22 @@ public class CourseServiceImpl implements CourseService{
     public void eliminar(Long id) {
  repository.deleteById(id);
     }
+
+
+
+    @Override
+    public Course update(Long id, Course course) {
+        Course existing = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado con id " + id));
+
+
+        existing.setNombre(course.getNombre());
+        existing.setDescripcion(course.getDescripcion());
+        existing.setProfesorId(course.getProfesorId());
+
+        return repository.save(existing);
+
+    }
+
+
 }

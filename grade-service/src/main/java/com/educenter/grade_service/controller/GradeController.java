@@ -1,5 +1,6 @@
 package com.educenter.grade_service.controller;
 
+import com.educenter.grade_service.dto.GradeResponseDTO;
 import com.educenter.grade_service.entity.Grade;
 import com.educenter.grade_service.service.GradeService;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +37,12 @@ private final GradeService gradeService;
     public ResponseEntity<List<Grade>> listResponseEntity(){
         return ResponseEntity.ok(gradeService.getAllGrades());
     }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<GradeResponseDTO>getGrade(@PathVariable Long id){
+        return ResponseEntity.ok(gradeService.getGradeWithCourse(id));
+    }
+
 
 }
