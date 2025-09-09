@@ -5,6 +5,7 @@ import com.educenter.grade_service.entity.Grade;
 import com.educenter.grade_service.service.GradeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ private final GradeService gradeService;
         return ResponseEntity.ok(saved);
 
     }
+
 
 
     @GetMapping("/list")

@@ -18,7 +18,7 @@ logging:
       springframework:
         security: DEBUG
 jwt:
-  secret: YbRKhIA0MAAUQtdZSHltsCpK6Hkheav3FAzE3y7Uvns9ZpMeBxgTi4wKeQld6SmgP
+  secret: YZAwASiuTVqWm23W5ze0Fa8uUiHV1KCe
   expiration: 1500000  # 25 minutos en milisegundos
 
 eureka:

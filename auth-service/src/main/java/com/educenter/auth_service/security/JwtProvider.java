@@ -1,5 +1,6 @@
 package com.educenter.auth_service.security;
 
+import com.educenter.auth_service.enums.Role;
 import io.jsonwebtoken.Claims;
 
 import io.jsonwebtoken.Jwts;
@@ -23,7 +24,8 @@ public class JwtProvider {
     @Value("${jwt.expiration}")
     private long jwtExpiration;
 
-    public String generateToken(String email, Long userId) {
+    public String generateToken(String email, Long userId, Role role) {
+
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
 
@@ -32,9 +34,10 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject(email)
                 .claim("userId", userId)
+                .claim("role", role.name())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(key, SignatureAlgorithm.HS512)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 

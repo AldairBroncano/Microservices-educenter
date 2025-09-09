@@ -1,0 +1,13 @@
+server:
+  port: 8090   # usa un puerto aleatorio en test
+
+spring:
+  application:
+    name: gateway-service
+
+jwt:
+  secret: test-secret-key
+
+eureka:
+  client:
+    enabled: false

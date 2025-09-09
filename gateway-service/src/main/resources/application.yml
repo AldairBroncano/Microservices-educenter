@@ -21,7 +21,34 @@ spring:
           uri: lb://user-service
           predicates:
             - Path=/api/users/**
+
+        - id: course-service
+          uri: lb://course-service
+          predicates:
+            - Path=/api/courses/**
+
+        - id: grade-service
+          uri: lb://grade-service
+          predicates:
+            - Path=/api/grades/**
+
+jwt:
+  secret: YZAwASiuTVqWm23W5ze0Fa8uUiHV1KCe
+
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+
+
+
