@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -53,33 +55,36 @@ public UserProfileDTO obternerPerfilDesdeAuth(Long id){
 
 
 
-
     public List<UserFullProfileDTO> getAllFullProfiles() {
-        return repository.findAll().stream()
-                .map(userInfo -> {
-                    UserProfileDTO authData = null;
+        List<User> users = repository.findAll();
 
-                    try {
-                        authData = authFeignClient.getUserById(userInfo.getId());
-                    } catch (Exception e) {
-                        System.out.println("No se pudo obtener datos desde Auth para ID: " + userInfo.getId());
-                    }
+        return users.stream().map(user -> {
+            // Llamada a auth-service
+            UserProfileDTO authData = authFeignClient.getUserById(user.getId());
 
-                    UserFullProfileDTO dto = new UserFullProfileDTO();
-                    dto.setId(userInfo.getId());
-                    dto.setUsername(authData != null ? authData.getUsername() : null);
-                    dto.setEmail(authData != null ? authData.getEmail() : null);
-                    // dto.setRole(authData != null ? authData.getRole() : null);
-                    dto.setName(userInfo.getName());
-                    dto.setLastName(userInfo.getLastName());
-                    dto.setFechaNacimiento(userInfo.getFechaNacimiento());
-                    dto.setPhone(userInfo.getPhone());
-                    dto.setProfilePhone(userInfo.getProfilePhone());
+            // Combinar datos
+            UserFullProfileDTO fullProfile = new UserFullProfileDTO();
+            fullProfile.setId(user.getId());
+            fullProfile.setUsername(authData.getUsername());
+            fullProfile.setEmail(authData.getEmail());
+            fullProfile.setRole(authData.getRole());
 
-                    return dto;
-                })
-                .toList();
+            fullProfile.setName(user.getName());
+            fullProfile.setLastName(user.getLastName());
+            fullProfile.setFechaNacimiento(user.getFechaNacimiento());
+            fullProfile.setPhone(user.getPhone());
+            fullProfile.setProfilePhone(user.getProfilePhone());
+
+            return fullProfile;
+        }).collect(Collectors.toList());
     }
+
+
+
+
+
+
+
 
 
 

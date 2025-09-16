@@ -1,6 +1,7 @@
 package com.educenter.user_service.dto;
 
 
+import com.educenter.user_service.enums.Role;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +17,7 @@ public class UserFullProfileDTO {
     private Long id;
     private String username;
     private String email;
-    private String role;
+    private Role role;
     private String name;
     @Column(name = "last_name")
     private String lastName;

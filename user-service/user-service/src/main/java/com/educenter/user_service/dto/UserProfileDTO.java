@@ -1,5 +1,6 @@
 package com.educenter.user_service.dto;
 
+import com.educenter.user_service.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ public class UserProfileDTO {
     private Long id;
     private String email;
     private String username;
+    private Role role;
 
 
 }

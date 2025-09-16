@@ -12,7 +12,10 @@ public class FeignClientConfig implements RequestInterceptor {
     public void apply(RequestTemplate template) {
         String token = TokenContextHolder.getToken();
 
-        if(token != null && !token.isEmpty()){
+        if (token != null && !token.isEmpty()) {
+            if (!token.startsWith("Bearer ")) {
+                token = "Bearer " + token;
+            }
             template.header("Authorization", token);
         }
 

@@ -22,6 +22,10 @@ public class SecurityConfig {
                        .requestMatchers("/api/user/auth-profile/**").permitAll()
                         .requestMatchers("/api/user/**").permitAll()
                         .requestMatchers("/api/auth/me").authenticated()
+                        .requestMatchers("/full-profiles").authenticated()
+                        .requestMatchers("/profiles").authenticated()
+
+
                         // Todas las demás requieren token
                         .anyRequest().authenticated()
                 )
