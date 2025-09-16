@@ -8,8 +8,10 @@ import com.educenter.user_service.repository.UserRepository;
 
 import com.educenter.user_service.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
@@ -82,6 +84,30 @@ public UserProfileDTO obternerPerfilDesdeAuth(Long id){
 
 
 
+
+    public UserFullProfileDTO getFullProfileById(Long id) {
+        // Buscar en la base de user-service
+        User user = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado en user-service"));
+
+        // Llamada a auth-service
+        UserProfileDTO authData = authFeignClient.getUserById(id);
+
+        // Combinar datos
+        UserFullProfileDTO fullProfile = new UserFullProfileDTO();
+        fullProfile.setId(user.getId());
+        fullProfile.setUsername(authData.getUsername());
+        fullProfile.setEmail(authData.getEmail());
+        fullProfile.setRole(authData.getRole());
+
+        fullProfile.setName(user.getName());
+        fullProfile.setLastName(user.getLastName());
+        fullProfile.setFechaNacimiento(user.getFechaNacimiento());
+        fullProfile.setPhone(user.getPhone());
+        fullProfile.setProfilePhone(user.getProfilePhone());
+
+        return fullProfile;
+    }
 
 
 

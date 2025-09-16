@@ -86,7 +86,10 @@ public ResponseEntity<UserProfileDTO> obtenerPerfilDesdeAuth(@PathVariable Long 
     }
 
 
-
+    @GetMapping("/full-profiles/{id}")
+    public ResponseEntity<UserFullProfileDTO> getFullProfileById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getFullProfileById(id));
+    }
 
 
 }
