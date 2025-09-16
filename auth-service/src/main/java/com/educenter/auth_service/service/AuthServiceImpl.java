@@ -1,6 +1,7 @@
 package com.educenter.auth_service.service;
 
 import com.educenter.auth_service.dto.AuthRegisterDTO;
+import com.educenter.auth_service.dto.AuthResponseDTO;
 import com.educenter.auth_service.dto.UserProfileDTO;
 import com.educenter.auth_service.entity.Auth;
 import com.educenter.auth_service.enums.Role;
@@ -50,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
 
         Auth savedUser = authRepository.save(auth);
 
-        UserProfileDTO perfil = new UserProfileDTO(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail());
+        AuthResponseDTO perfil = new AuthResponseDTO(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail());
         restTemplate.postForObject("http://localhost:8082/api/user/crear", perfil, Void.class);
 
 
@@ -62,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
     public UserProfileDTO getUserProfileById(Long id) {
         Auth user = authRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
-        return new UserProfileDTO(user.getId(), user.getUsername(), user.getEmail());
+        return new UserProfileDTO(user.getId(), user.getUsername(), user.getEmail(), user.getRole());
     }
 
 

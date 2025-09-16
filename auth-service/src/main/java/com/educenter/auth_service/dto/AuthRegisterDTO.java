@@ -11,4 +11,7 @@ public class AuthRegisterDTO
     private String username;
     private String email;
     private String password;
+
+    public AuthRegisterDTO(Long id, String username, String email) {
+    }
 }

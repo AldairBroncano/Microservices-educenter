@@ -20,7 +20,7 @@ public class Course {
     private String nombre;
     @Column(nullable = false)
     private String descripcion;
-    private String profesorId;
+    private Long profesorId;
 
 
 }

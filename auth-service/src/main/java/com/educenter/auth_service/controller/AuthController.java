@@ -7,6 +7,7 @@ import com.educenter.auth_service.dto.UserProfileDTO;
 import com.educenter.auth_service.entity.Auth;
 import com.educenter.auth_service.enums.Role;
 import com.educenter.auth_service.mapper.AuthMapper;
+import com.educenter.auth_service.repository.AuthRepository;
 import com.educenter.auth_service.security.JwtProvider;
 import com.educenter.auth_service.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -43,11 +45,13 @@ public class AuthController {
 
     private final AuthService authService;
 
+    private AuthRepository repo;
+
     @PostMapping("/register")
     public ResponseEntity<AuthResponseDTO> registerUser(@RequestBody AuthRegisterDTO userDTO){
         Auth auth = AuthMapper.toEntity(userDTO);
         auth.setPassword(passwordEncoder.encode(auth.getPassword()));
-        auth.setRole(Role.ADMIN);
+        auth.setRole(Role.TEACHER);
         Auth savedAuth = authService.saveUser(auth);
 
         return ResponseEntity.ok(AuthMapper.toDTO(savedAuth));
@@ -123,6 +127,21 @@ public class AuthController {
         return ResponseEntity.ok(authService.getUserProfileById(id));
     }
 
+
+    @PostMapping("/profiles")
+    public ResponseEntity<List<UserProfileDTO>> getUsersProfiles(@RequestBody List<Long> ids, @RequestHeader(value = "Authorization", required = false) String authHeader ) {
+        System.out.println("AuthHeader recibido en /profiles: " + authHeader);
+        List<UserProfileDTO> profiles = repo.findAllById(ids).stream()
+                .map(user -> new UserProfileDTO(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getEmail(),
+                        user.getRole()
+                ))
+                .toList();
+
+        return ResponseEntity.ok(profiles);
+    }
 
 
 

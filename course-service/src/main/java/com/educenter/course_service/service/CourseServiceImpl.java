@@ -1,9 +1,15 @@
 package com.educenter.course_service.service;
 
+import com.educenter.course_service.dto.UserProfileDTO;
 import com.educenter.course_service.entity.Course;
+import com.educenter.course_service.enums.Role;
+import com.educenter.course_service.feign.AuthFeignClient;
 import com.educenter.course_service.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -14,6 +20,7 @@ public class CourseServiceImpl implements CourseService{
 
 
     private final CourseRepository repository;
+    private final AuthFeignClient authFeignClient;
 
 
 
@@ -25,6 +32,22 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public Course saveCourse(Course course) {
+
+        UserProfileDTO profesor = authFeignClient.getUserById(course.getProfesorId());
+        System.out.println("Profesor encontrado: " + profesor);
+
+        if (profesor == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "eL profesor no existe");
+
+        }
+
+        if (profesor.getRole() != Role.TEACHER) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El usuario no es profesor");
+        }
+
+
+
+
         return repository.save(course);
     }
 
@@ -53,6 +76,10 @@ public class CourseServiceImpl implements CourseService{
         return repository.save(existing);
 
     }
+
+
+
+
 
 
 }
