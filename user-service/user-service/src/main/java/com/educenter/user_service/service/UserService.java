@@ -38,6 +38,7 @@ public class UserService {
 @Transactional
 public User guardar(User user){
     System.out.println("LastName recibido en Service: " + user.getLastName());
+
     return repository.save(user);
 }
 

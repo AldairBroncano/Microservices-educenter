@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface UserFeignClient {
 
 
-@GetMapping("/{id}")
+@GetMapping("/full-profiles/{id}")
 UserDTO getUserById(@PathVariable("id") long id);
 
 

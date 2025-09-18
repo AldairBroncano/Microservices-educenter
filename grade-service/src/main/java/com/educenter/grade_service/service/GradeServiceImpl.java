@@ -8,7 +8,9 @@ import com.educenter.grade_service.feign.CourseFeignClient;
 import com.educenter.grade_service.feign.UserFeignClient;
 import com.educenter.grade_service.repositoty.GradeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -27,9 +29,21 @@ public class GradeServiceImpl implements GradeService{
     @Override
     public Grade saveGrade(Grade grade) {
         CourseDTO course = courseClient.getCourseById(grade.getCourseId());
+        UserDTO user = userClient.getUserById(grade.getStudentId());
+
         if (course == null) {
             throw new RuntimeException("El curso con ID " + grade.getCourseId() + " no existe");
+
         }
+
+        if(user == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"El estudiante no existe");
+
+        }
+        if(!"STUDENT".equalsIgnoreCase(String.valueOf(user.getRole()))){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El usuario no es un estudiante");
+        }
+
         return gradeRepository.save(grade);
     }
 
@@ -73,6 +87,16 @@ public class GradeServiceImpl implements GradeService{
 
         CourseDTO course = courseClient.getCourseById(grade.getCourseId());
         UserDTO user = userClient.getUserById(grade.getStudentId());
+
+
+      /* if(user == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"El estudiante no existe");
+        }
+        if(!"STUDENT".equalsIgnoreCase(String.valueOf(user.getRole()))){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El usuario no es un estudiante");
+        }
+
+*/
 
         return GradeResponseDTO.builder()
                 .id(grade.getId())

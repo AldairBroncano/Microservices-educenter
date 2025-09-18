@@ -21,16 +21,13 @@ public class User {
     private Long id; // Mismo que auth
     private String name;
 
-    @Column(name = "last_name")
+
     private String lastName;
-    @Column(name = "fecha_nacimiento")
+
     private LocalDate fechaNacimiento;
     private String phone;
-    @Column(name = "profile_phone")
+
     private String profilePhone;
-
-
-    
 
 
 
