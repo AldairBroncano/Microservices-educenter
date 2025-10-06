@@ -32,6 +32,17 @@ spring:
           predicates:
             - Path=/api/grades/**
 
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:4200"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
 jwt:
   secret: YZAwASiuTVqWm23W5ze0Fa8uUiHV1KCe
 

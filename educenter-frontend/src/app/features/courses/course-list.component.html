@@ -1,0 +1,28 @@
+<h2>📚 Lista de Cursos</h2>
+
+<table cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Profesor</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let c of courses">
+      <td>{{ c.id }}</td>
+      <td>{{ c.nombre }}</td>
+      <td>{{ c.descripcion }}</td>
+      <td>{{ c.teacherId }}</td>
+      <td>
+        <!-- Botón Editar -->
+        <button *ngIf="canEdit(c)" (click)="editCourse(c)">✏️ Editar</button>
+
+        <!-- Botón Eliminar -->
+        <button *ngIf="roles.includes('ADMIN')" (click)="deleteCourse(c.id)">🗑️ Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
