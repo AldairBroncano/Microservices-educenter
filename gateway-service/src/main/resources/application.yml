@@ -43,6 +43,7 @@ spring:
               - DELETE
               - OPTIONS
             allowedHeaders: "*"
+            allowCredentials: true
 jwt:
   secret: YZAwASiuTVqWm23W5ze0Fa8uUiHV1KCe
 

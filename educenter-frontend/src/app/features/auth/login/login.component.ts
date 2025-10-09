@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './login.html',
   styleUrls: ['./login.scss'],
 })
@@ -33,6 +33,7 @@ export class LoginComponent {
       },
       error: (err) => {
         console.error('Error de login (full error):', err);
+        //  alert('No se pudo inciar session');
         // muestra status / body si existe
         const status = err?.status ?? 'no-status';
         const body = err?.error ?? err?.message ?? JSON.stringify(err);

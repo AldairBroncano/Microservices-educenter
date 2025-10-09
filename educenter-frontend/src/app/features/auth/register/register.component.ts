@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.html',
-  // styleUrls: ['./register.css'],
-  imports: [CommonModule, FormsModule],
+  styleUrls: ['./register.scss'],
+  imports: [CommonModule, FormsModule, RouterModule],
 })
 export class RegisterComponent {
   payload = { username: '', email: '', password: '' };

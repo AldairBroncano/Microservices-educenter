@@ -29,14 +29,13 @@ public class SecurityConfig {
     private CustomAuthDetailsService customAuthDetailsService;
 
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login", "/api/auth/{id}","/api/auth/register", "api/auth/profile/{id}").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/auth/{id}","/api/auth/register", "/api/auth/profile/{id}").permitAll()
                         .requestMatchers("/profiles").hasAnyRole("ADMIN", "STUDENT", "TEACHER") // 👈 permitir según roles
                         .anyRequest().authenticated()
                 )

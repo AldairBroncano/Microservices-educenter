@@ -1,69 +1,106 @@
-.auth-container {
-  max-width: 400px;
-  margin: 80px auto;
+.login-wrapper {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  background: #f5f5f5;
   padding: 2rem;
-  border-radius: 12px;
-  background: #ffffff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  font-family: Arial, sans-serif;
-}
 
-.auth-container h2 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: #333;
-}
+  .login-image {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-.auth-container form div {
-  margin-bottom: 1.2rem;
-}
+    img {
+      max-width: 100%;
+      max-height: 300px;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+  }
 
-.auth-container label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #555;
-}
+  .auth-container {
+    flex: 1;
+    max-width: 400px;
+    padding: 2rem;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-family: Arial, sans-serif;
 
-.auth-container input {
-  width: 100%;
-  padding: 0.7rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.3s;
-}
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
 
-.auth-container input:focus {
-  border-color: #3f51b5; /* Azul estilo Angular Material */
-  box-shadow: 0 0 4px rgba(63, 81, 181, 0.4);
-}
+    form div {
+      margin-bottom: 1.2rem;
+    }
 
-.auth-container button {
-  width: 100%;
-  padding: 0.8rem;
-  border: none;
-  border-radius: 8px;
-  background-color: #3f51b5;
-  color: white;
-  font-weight: bold;
-  font-size: 15px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #555;
+    }
 
-.auth-container button:disabled {
-  background-color: #9fa8da;
-  cursor: not-allowed;
-}
+    input {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
 
-.auth-container button:hover:not(:disabled) {
-  background-color: #303f9f;
-}
+    input:focus {
+      border-color: #3f51b5;
+      box-shadow: 0 0 4px rgba(63, 81, 181, 0.4);
+    }
 
-.auth-container p {
-  margin-top: 1rem;
-  text-align: center;
-  font-size: 14px;
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-bottom: 0.8rem;
+    }
+
+    .register-btn {
+      background-color: #36be41;
+
+      &:hover {
+        background-color: #298f31;
+      }
+    }
+
+    .login-btn {
+      background-color: #3f51b5;
+
+      &:hover {
+        background-color: #303f9f;
+      }
+    }
+
+    button:disabled {
+      background-color: #9fa8da;
+      cursor: not-allowed;
+    }
+
+    .error-message {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 14px;
+      color: red;
+    }
+  }
 }

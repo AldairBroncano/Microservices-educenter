@@ -1,18 +1,31 @@
-<div class="auth-container">
-  <h2>Registro</h2>
-  <form (ngSubmit)="onRegister()" #registerForm="ngForm">
-    <div>
-      <label>Usuario:</label>
-      <input type="text" name="username" [(ngModel)]="payload.username" required />
-    </div>
-    <div>
-      <label>Email:</label>
-      <input type="email" name="email" [(ngModel)]="payload.email" required />
-    </div>
-    <div>
-      <label>Contraseña:</label>
-      <input type="password" name="password" [(ngModel)]="payload.password" required />
-    </div>
-    <button type="submit" [disabled]="registerForm.invalid">Registrarse</button>
-  </form>
+<div class="register-wrapper">
+  <!-- Lado izquierdo (imagen/logo) -->
+  <div class="register-image">
+    <img src="assets/LogoEducenter.png" alt="Logo de la marca" />
+  </div>
+
+  <!-- Lado derecho (formulario) -->
+  <div class="auth-container">
+    <h2>Registro</h2>
+    <form (ngSubmit)="onRegister()" #registerForm="ngForm">
+      <div>
+        <label>Usuario:</label>
+        <input type="text" name="username" [(ngModel)]="payload.username" required />
+      </div>
+      <div>
+        <label>Email:</label>
+        <input type="email" name="email" [(ngModel)]="payload.email" required />
+      </div>
+      <div>
+        <label>Contraseña:</label>
+        <input type="password" name="password" [(ngModel)]="payload.password" required />
+      </div>
+
+      <button type="submit" class="register-btn" [disabled]="registerForm.invalid">
+        Registrarse
+      </button>
+
+      <button type="button" class="login-btn" [routerLink]="'/login'">Iniciar Sesión</button>
+    </form>
+  </div>
 </div>
