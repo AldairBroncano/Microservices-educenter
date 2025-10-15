@@ -44,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
 
         Auth auth = new Auth();
 
-        auth.setUsername(dto.getUsername());
+        auth.setUser(dto.getUser());
         auth.setEmail(dto.getEmail());
         auth.setPassword(passwordEncoder.encode(dto.getPassword()));
         auth.setRole(Role.STUDENT);

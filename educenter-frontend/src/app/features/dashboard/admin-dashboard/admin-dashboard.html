@@ -1,0 +1,8 @@
+<h2>Panel de Administrador</h2>
+<p>Bienvenido/a, {{ authService.getUsername() }}</p>
+
+<nav>
+  <button routerLink="/courses">📘 Ver Cursos</button>
+  <button routerLink="/users">👤 Gestionar Usuarios</button>
+  <button (click)="authService.logout()">🚪 Cerrar sesión</button>
+</nav>

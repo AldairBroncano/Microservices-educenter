@@ -1,0 +1,38 @@
+.dashboard {
+  padding: 2rem;
+  text-align: center;
+
+  h2 {
+    color: #3f51b5;
+  }
+
+  nav {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+
+    button {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      background-color: #3f51b5;
+      font-weight: bold;
+      transition: background 0.3s;
+
+      &:hover {
+        background-color: #303f9f;
+      }
+
+      &:last-child {
+        background-color: #e53935;
+
+        &:hover {
+          background-color: #b71c1c;
+        }
+      }
+    }
+  }
+}

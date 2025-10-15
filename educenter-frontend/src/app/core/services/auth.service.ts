@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -10,7 +11,7 @@ export class AuthService {
   private userSubject = new BehaviorSubject<any>(this.parseToken(this.getToken()));
   user$ = this.userSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   login(credentials: { email: string; password: string }): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/auth/login`, credentials).pipe(
@@ -32,6 +33,8 @@ export class AuthService {
       localStorage.removeItem(this.tokenKey);
     }
     this.userSubject.next(null);
+    // 🔹 Redirigir al login
+    this.router.navigate(['/login']);
   }
 
   private setToken(token: string) {
@@ -52,8 +55,25 @@ export class AuthService {
   }
 
   getUserRoles(): string[] {
-    const p = this.parseToken(this.getToken());
-    return p && p.roles ? p.roles : [];
+    const payload = this.parseToken(this.getToken());
+
+    if (!payload) return [];
+
+    // Si viene "roles": ["ROLE_ADMIN"] o similar
+    if (Array.isArray(payload.roles)) {
+      return payload.roles.map((r: string) => r.replace(/^ROLE_/, '').toUpperCase());
+    }
+
+    // Si viene "role": "ADMIN" (como en tu backend actual)
+    if (payload.role) {
+      return [
+        String(payload.role)
+          .replace(/^ROLE_/, '')
+          .toUpperCase(),
+      ];
+    }
+
+    return [];
   }
 
   hasAnyRole(expected: string[] = []): boolean {
@@ -75,5 +95,40 @@ export class AuthService {
     } catch (e) {
       return null;
     }
+  }
+
+  getUsername(): string | null {
+    const payload = this.parseToken(this.getToken());
+    return payload ? payload.sub || payload.user || null : null;
+  }
+
+  getRole(): string | null {
+    const payload = this.parseToken(this.getToken());
+    if (!payload) return null;
+
+    // Nuevo backend: "role": "ADMIN"
+    if (payload.role) {
+      return String(payload.role)
+        .replace(/^ROLE_/, '')
+        .toUpperCase();
+    }
+
+    // Caso antiguo: "roles": ["ROLE_ADMIN"]
+    if (Array.isArray(payload.roles) && payload.roles.length > 0) {
+      return payload.roles[0].replace(/^ROLE_/, '').toUpperCase();
+    }
+
+    return null;
+  }
+
+  // devuelve array normalizado ['ADMIN','TEACHER'...]
+  getRolesNormalized(): string[] {
+    const roles = this.getUserRoles();
+    if (!roles) return [];
+    return roles.map((r: string) => r.replace(/^ROLE_/, '').toUpperCase());
+  }
+
+  saveToken(token: string) {
+    localStorage.setItem('token', token);
   }
 }

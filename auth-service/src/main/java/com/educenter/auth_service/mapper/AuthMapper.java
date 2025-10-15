@@ -10,7 +10,7 @@ public class AuthMapper {
         AuthResponseDTO dto = new AuthResponseDTO();
 
      dto.setId(auth.getId());
-     dto.setUsername(auth.getUsername());
+     dto.setUser(auth.getUser());
      dto.setEmail(auth.getEmail());
 
 
@@ -21,7 +21,7 @@ public class AuthMapper {
 
     public static Auth toEntity(AuthRegisterDTO dto) {
         Auth auth = new Auth();
-        auth.setUsername(dto.getUsername());
+        auth.setUser(dto.getUser());
         auth.setEmail(dto.getEmail());
         auth.setPassword(dto.getPassword()); // Aquí encriptarás luego
         return auth;

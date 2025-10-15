@@ -24,7 +24,8 @@ public class Auth implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
+    @Column(name = "username")
+    private String user;
 
     private String email;
 
@@ -46,6 +47,8 @@ public class Auth implements UserDetails {
     public String getUsername() {
         return email;
     }
+
+
 
 
     @Override

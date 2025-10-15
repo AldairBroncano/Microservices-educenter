@@ -12,11 +12,11 @@ public class AuthRegisterDTO
 {
 
     private Long id;
-    private String username;
+    private String user;
     private String email;
     private String password;
 
-    public AuthRegisterDTO(Long id, String username, String email) {
+    public AuthRegisterDTO(Long id, String user, String email) {
     }
 
 }

@@ -22,6 +22,12 @@ export class LoginComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
+  private normalizeRoles(rawRoles: any): string[] {
+    if (!rawRoles) return [];
+    const arr = Array.isArray(rawRoles) ? rawRoles : [rawRoles];
+    return arr.map((r: any) => String(r)).map((r: string) => r.replace(/^ROLE_/, '').toUpperCase());
+  }
+
   onLogin() {
     console.log('[DEBUG] POST URL:', `${environment.apiUrl}/auth/login`);
     console.log('[DEBUG] BODY:', this.credentials);
@@ -29,12 +35,28 @@ export class LoginComponent {
     this.authService.login(this.credentials).subscribe({
       next: (res) => {
         console.log('Login OK:', res);
-        this.router.navigate(['/']);
+
+        // Guardar token en localStorage
+        this.authService['setToken'](res.token);
+
+        // Normalizar rol devuelto por el backend
+        const roles = this.normalizeRoles(res.role);
+
+        console.log('Rol detectado:', roles);
+
+        // Redirección por tipo de usuario
+        if (roles.includes('ADMIN')) {
+          this.router.navigate(['/admin-dashboard']);
+        } else if (roles.includes('TEACHER')) {
+          this.router.navigate(['/teacher-dashboard']);
+        } else if (roles.includes('STUDENT')) {
+          this.router.navigate(['/student-dashboard']);
+        } else {
+          this.router.navigate(['/courses']);
+        }
       },
       error: (err) => {
         console.error('Error de login (full error):', err);
-        //  alert('No se pudo inciar session');
-        // muestra status / body si existe
         const status = err?.status ?? 'no-status';
         const body = err?.error ?? err?.message ?? JSON.stringify(err);
         this.errorMessage = `Error ${status}: ${

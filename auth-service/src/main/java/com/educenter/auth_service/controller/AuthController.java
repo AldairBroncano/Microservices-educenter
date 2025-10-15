@@ -51,7 +51,7 @@ public class AuthController {
     public ResponseEntity<AuthResponseDTO> registerUser(@RequestBody AuthRegisterDTO userDTO){
         Auth auth = AuthMapper.toEntity(userDTO);
         auth.setPassword(passwordEncoder.encode(auth.getPassword()));
-        auth.setRole(Role.TEACHER);
+        auth.setRole(Role.STUDENT);
         Auth savedAuth = authService.saveUser(auth);
 
         return ResponseEntity.ok(AuthMapper.toDTO(savedAuth));
@@ -102,7 +102,7 @@ public class AuthController {
 
 
 // 🔐 Generar el token JWT
-            String token = jwtProvider.generateToken(userDetails.getUsername() , auth.getId(), auth.getRole() ); // username = email
+            String token = jwtProvider.generateToken(userDetails.getUsername() , auth.getId(), auth.getRole(), auth.getUser() ); // username = email
             System.out.println("TOKEN GENERADO: " + token);
 
             // 📦 Armar la respuesta
@@ -111,7 +111,7 @@ public class AuthController {
             response.put("token", token);
             response.put("userId", auth.getId());
             response.put("email", auth.getEmail());
-            response.put("username", auth.getUsername());
+            response.put("username", auth.getUser());
             response.put("role", auth.getRole());
 
             return ResponseEntity.ok(response);

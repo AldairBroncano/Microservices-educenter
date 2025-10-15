@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CourseService } from './course.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
-
+import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-course-list',
   templateUrl: './course-list.component.html',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
 })
 export class CourseListComponent implements OnInit {
   courses: any[] = [];
