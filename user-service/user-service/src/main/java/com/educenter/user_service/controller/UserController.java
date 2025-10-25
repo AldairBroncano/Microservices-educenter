@@ -92,4 +92,9 @@ public ResponseEntity<UserProfileDTO> obtenerPerfilDesdeAuth(@PathVariable Long 
     }
 
 
+
+
+
+
+
 }

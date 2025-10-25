@@ -17,11 +17,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   // ✅ Agregar token solo si existe y no es ruta pública
   if (token) {
+    console.log('🟢 Token enviado para:', req.url);
     const cloned = req.clone({
       setHeaders: { Authorization: `Bearer ${token}` },
     });
     return next(cloned);
   }
-
+  console.warn('⚠️ No se encontró token para:', req.url);
   return next(req);
 };

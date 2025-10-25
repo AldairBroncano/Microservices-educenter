@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @Table(name = "cursos")
@@ -20,7 +23,11 @@ public class Course {
     private String nombre;
     @Column(nullable = false)
     private String descripcion;
-    private Long profesorId;
+
+    @ElementCollection
+    @CollectionTable(name = "curso_profesores", joinColumns = @JoinColumn(name = "curso_id"))
+    @Column(name = "profesor_id")
+    private List<Long> profesorIds = new ArrayList<>();
 
 
 }

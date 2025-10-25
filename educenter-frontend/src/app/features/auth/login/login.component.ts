@@ -44,6 +44,8 @@ export class LoginComponent {
 
         console.log('Rol detectado:', roles);
 
+        this.router.navigate(['/courses']);
+
         // Redirección por tipo de usuario
         if (roles.includes('ADMIN')) {
           this.router.navigate(['/admin-dashboard']);

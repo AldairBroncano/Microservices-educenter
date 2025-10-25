@@ -131,4 +131,11 @@ export class AuthService {
   saveToken(token: string) {
     localStorage.setItem('token', token);
   }
+
+  getUserid(): number | null {
+    const payload = this.parseToken(this.getToken());
+    if (!payload) return null;
+
+    return payload.id || null;
+  }
 }

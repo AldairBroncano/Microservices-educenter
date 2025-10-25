@@ -51,7 +51,7 @@ public class AuthController {
     public ResponseEntity<AuthResponseDTO> registerUser(@RequestBody AuthRegisterDTO userDTO){
         Auth auth = AuthMapper.toEntity(userDTO);
         auth.setPassword(passwordEncoder.encode(auth.getPassword()));
-        auth.setRole(Role.STUDENT);
+        auth.setRole(Role.TEACHER);
         Auth savedAuth = authService.saveUser(auth);
 
         return ResponseEntity.ok(AuthMapper.toDTO(savedAuth));

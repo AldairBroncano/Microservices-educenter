@@ -1,28 +1,38 @@
-<h2>📚 Lista de Cursos</h2>
+<h2>📚 Lista de cursos</h2>
 
-<table cellpadding="6" cellspacing="0">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nombre</th>
-      <th>Descripción</th>
-      <th>Profesor</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let c of courses">
-      <td>{{ c.id }}</td>
-      <td>{{ c.nombre }}</td>
-      <td>{{ c.descripcion }}</td>
-      <td>{{ c.teacherId }}</td>
-      <td>
-        <!-- Botón Editar -->
-        <button *ngIf="canEdit(c)" (click)="editCourse(c)">✏️ Editar</button>
+<button (click)="goBack()" class="back-button">⬅️ Regresar al panel</button>
 
-        <!-- Botón Eliminar -->
-        <button *ngIf="roles.includes('ADMIN')" (click)="deleteCourse(c.id)">🗑️ Eliminar</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<!-- resto de tu código -->
+
+<!-- Guardamos el resultado del observable en una variable 'courses' -->
+<ng-container *ngIf="courses$ | async as courses">
+  <div *ngIf="courses.length === 0" class="empty">
+    No hay cursos disponibles o no tienes permisos.
+  </div>
+
+  <table *ngIf="courses.length > 0" class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Descripción</th>
+        <th>Créditos</th>
+        <th>Activo</th>
+        <th>Fecha</th>
+        <th *ngIf="roles.includes('ADMIN') || roles.includes('TEACHER')">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of courses">
+        <td>{{ c.id }}</td>
+        <td>{{ c.descripcion }}</td>
+        <td>{{ c.creditos }}</td>
+        <td>{{ c.activo }}</td>
+        <td>{{ c.fecha }}</td>
+        <td *ngIf="canEdit(c)">
+          <button (click)="editCourse(c)">✏️ Editar</button>
+          <button (click)="deleteCourse(c.id)">🗑️ Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</ng-container>

@@ -16,6 +16,4 @@ export const routes: Routes = [
   { path: 'teacher-dashboard', component: TeacherDashboard, canActivate: [AuthGuard] },
   { path: 'student-dashboard', component: StudentDashboard, canActivate: [AuthGuard] },
   { path: 'courses', component: CourseListComponent, canActivate: [AuthGuard] },
-
-  { path: '', redirectTo: '/courses', pathMatch: 'full' },
 ];

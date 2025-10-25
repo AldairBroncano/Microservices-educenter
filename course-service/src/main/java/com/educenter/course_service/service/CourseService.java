@@ -16,5 +16,9 @@ public interface CourseService {
 
     Course update(Long id, Course course);
 
+    List<Course> listarCursosSinProfesor();
+
+    Course assignTeacher(Long courseId, Long teacherId);
+
 
 }

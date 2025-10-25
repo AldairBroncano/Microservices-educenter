@@ -1,52 +1,76 @@
 import { Component, OnInit } from '@angular/core';
-import { CourseService } from './course.service';
-import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { CourseService } from './course.service';
+import { AuthService } from '../../core/services/auth.service';
+import { Observable } from 'rxjs';
+import { error } from 'console';
+
 @Component({
   selector: 'app-course-list',
-  templateUrl: './course-list.component.html',
+  standalone: true,
   imports: [CommonModule, RouterModule],
+  templateUrl: './course-list.component.html',
+  styleUrls: ['./course-list.scss'],
 })
 export class CourseListComponent implements OnInit {
-  courses: any[] = [];
+  courses$!: Observable<any[]>; // Observable que usaremos con async pipe
   roles: string[] = [];
   user: any;
 
-  constructor(private cs: CourseService, public auth: AuthService) {}
+  constructor(private cs: CourseService, public auth: AuthService, private router: Router) {}
 
   ngOnInit() {
-    this.load();
+    this.courses$ = this.cs.getAll(); // ✅ Usa 'this.' para acceder a la propiedad
     this.roles = this.auth.getUserRoles();
 
-    // Obtener usuario actual del observable
     this.auth.user$.subscribe((u) => {
       this.user = u;
     });
   }
 
-  load() {
-    this.cs.getAll().subscribe((res) => (this.courses = res));
-  }
-
   canEdit(course: any) {
     if (this.roles.includes('ADMIN')) return true;
     if (this.roles.includes('TEACHER') && this.user) {
-      return this.user.id === course.teacherId;
+      return this.user.id === course.profesorId;
     }
     return false;
   }
 
   editCourse(course: any) {
-    // Aquí puedes redirigir a un formulario o abrir un modal
-    console.log('Editar curso:', course);
+    this.router.navigate(['/courses/edit', course.id]);
   }
 
   deleteCourse(id: number) {
     if (confirm('¿Seguro que deseas eliminar este curso?')) {
       this.cs.delete(id).subscribe(() => {
-        this.load(); // recargar lista después de borrar
+        // 🔄 Recargar los datos después de eliminar
+        this.courses$ = this.cs.getAll();
       });
     }
+  }
+
+  goBack() {
+    if (this.roles.includes('ADMIN')) {
+      this.router.navigate(['/admin-dashboard']);
+    } else if (this.roles.includes('TEACHER')) {
+      this.router.navigate(['/teacher-dashboard']);
+    } else if (this.roles.includes('STUDENT')) {
+      this.router.navigate(['/student-dashboard']);
+    } else {
+      this.router.navigate(['/login']); // por si acaso no hay rol
+    }
+  }
+
+  enroll(courseId: number) {
+    const userId = this.auth.getUserid();
+    if (!userId) {
+      alert('⚠️ No se pudo obtener tu usuario. Inicia sesión de nuevo.');
+      return;
+    }
+
+    this.cs.enroll(courseId, userId).subscribe(() => {
+      alert('✅ Te inscribiste correctamente');
+    });
   }
 }

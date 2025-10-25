@@ -3,6 +3,8 @@ package com.educenter.course_service.controller;
 import com.educenter.course_service.entity.Course;
 import com.educenter.course_service.service.CourseService;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
@@ -55,6 +57,17 @@ public class CourseController {
     public ResponseEntity<Course>update(@PathVariable Long id, @RequestBody Course course){
         return ResponseEntity.ok(service.update(id, course));
 }
+
+
+    @PostMapping("/{courseId}/assign/{teacherId}")
+public ResponseEntity<?> assignTeacherToCourse(@PathVariable Long courseId, @PathVariable Long teacherId){
+       Course update =  service.assignTeacher(courseId, teacherId);
+        return ResponseEntity.ok("Se asigno correctamente al curso");
+}
+
+
+
+
 
 
 }

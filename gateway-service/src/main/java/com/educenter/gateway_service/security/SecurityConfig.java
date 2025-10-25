@@ -25,14 +25,14 @@ public class SecurityConfig {
 
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .cors(ServerHttpSecurity.CorsSpec::disable)
+               // .cors(ServerHttpSecurity.CorsSpec::disable)
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers("/api/auth/**").permitAll()
                         .pathMatchers("/auth/**").permitAll()
                         .pathMatchers("/actuator/**").permitAll()
                         .pathMatchers("/api/users/**").authenticated()
-                        .pathMatchers("/api/courses/create").hasRole("ADMIN")
-                        .pathMatchers("/api/courses/**").hasAnyRole("TEACHER","ADMIN")
+                        .pathMatchers("/api/courses").permitAll()
+                      .pathMatchers("/api/courses/**").hasAnyRole("TEACHER","ADMIN")
                         .pathMatchers("/api/grades/**").hasAnyRole("TEACHER","ADMIN")
                         .anyExchange().authenticated()
                 )
