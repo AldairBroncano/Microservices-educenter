@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -120,6 +121,25 @@ public class CourseServiceImpl implements CourseService{
         // 🔹 Guardamos y devolvemos el curso actualizado
         return repository.save(course);
     }
+
+
+    public Course enrollStudent(Long courseId, Long studentId) {
+        Course course = repository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+        // Añadir el userId a la lista de alumnos (si no existe)
+        if (course.getStudentIds() == null) {
+            course.setStudentIds(new ArrayList<>());
+        }
+
+        if (!course.getStudentIds().contains(studentId)) {
+            course.getStudentIds().add(studentId);
+            repository.save(course);
+        }
+
+        return course;
+    }
+
 
 
 

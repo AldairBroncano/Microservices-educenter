@@ -23,18 +23,15 @@ export class CourseListComponent implements OnInit {
   ngOnInit() {
     this.courses$ = this.cs.getAll(); // ✅ Usa 'this.' para acceder a la propiedad
     this.roles = this.auth.getUserRoles();
+    console.log('Rol del usuario:', this.roles);
 
     this.auth.user$.subscribe((u) => {
       this.user = u;
     });
   }
 
-  canEdit(course: any) {
-    if (this.roles.includes('ADMIN')) return true;
-    if (this.roles.includes('TEACHER') && this.user) {
-      return this.user.id === course.profesorId;
-    }
-    return false;
+  canEdit(course: any): boolean {
+    return this.roles.includes('ADMIN');
   }
 
   editCourse(course: any) {
@@ -63,7 +60,7 @@ export class CourseListComponent implements OnInit {
   }
 
   enroll(courseId: number) {
-    const userId = this.auth.getUserid();
+    const userId = this.auth.getUserId();
     if (!userId) {
       alert('⚠️ No se pudo obtener tu usuario. Inicia sesión de nuevo.');
       return;
@@ -71,6 +68,19 @@ export class CourseListComponent implements OnInit {
 
     this.cs.enroll(courseId, userId).subscribe(() => {
       alert('✅ Te inscribiste correctamente');
+    });
+  }
+
+  assignTeacher(courseId: number) {
+    const userId = this.auth.getUserId();
+    if (!userId) {
+      alert('⚠️ No se pudo obtener tu usuario. Inicia sesión de nuevo.');
+      return;
+    }
+
+    this.cs.assignTeacher(courseId, userId).subscribe({
+      next: () => alert('✅ Profesor asignado correctamente al curso'),
+      error: (err) => alert('❌ Error al asignar profesor: ' + err.message),
     });
   }
 }

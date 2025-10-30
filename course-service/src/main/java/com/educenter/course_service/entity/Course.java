@@ -30,4 +30,10 @@ public class Course {
     private List<Long> profesorIds = new ArrayList<>();
 
 
+    @ElementCollection
+    @CollectionTable(name = "curso_estudiantes", joinColumns = @JoinColumn(name = "curso_id"))
+    @Column(name = "estudiante_id")
+    private List<Long> studentIds = new ArrayList<>();
+
+
 }

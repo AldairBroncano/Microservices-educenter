@@ -47,10 +47,25 @@ export class CourseService {
     });
   }
 
-  enroll(courseId: number) {
-    const userId = this.auth.getUserId(); // obténlo del token o del servicio Auth
-    this.courseService.enroll(courseId, userId).subscribe(() => {
-      alert('✅ Te inscribiste correctamente');
-    });
+  enroll(courseId: number, id: number) {
+    return this.http.post(
+      `${this.base}/${courseId}/enroll/${id}`,
+      {},
+      {
+        headers: this.getHeaders(),
+      }
+    );
+  }
+
+  // ✅ Asignar profesor a un curso
+  assignTeacher(courseId: number, teacherId: number): Observable<any> {
+    return this.http.post(
+      `${this.base}/${courseId}/assign/${teacherId}`,
+      {},
+      {
+        headers: this.getHeaders(),
+        responseType: 'text',
+      }
+    );
   }
 }

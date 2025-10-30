@@ -20,5 +20,5 @@ public interface CourseService {
 
     Course assignTeacher(Long courseId, Long teacherId);
 
-
+    Course enrollStudent(Long courseId, Long studentId);
 }

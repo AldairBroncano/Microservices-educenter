@@ -2,9 +2,6 @@
 
 <button (click)="goBack()" class="back-button">⬅️ Regresar al panel</button>
 
-<!-- resto de tu código -->
-
-<!-- Guardamos el resultado del observable en una variable 'courses' -->
 <ng-container *ngIf="courses$ | async as courses">
   <div *ngIf="courses.length === 0" class="empty">
     No hay cursos disponibles o no tienes permisos.
@@ -18,7 +15,11 @@
         <th>Créditos</th>
         <th>Activo</th>
         <th>Fecha</th>
-        <th *ngIf="roles.includes('ADMIN') || roles.includes('TEACHER')">Acciones</th>
+        <th
+          *ngIf="roles.includes('ADMIN') || roles.includes('TEACHER') || roles.includes('STUDENT')"
+        >
+          Acciones
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -28,9 +29,23 @@
         <td>{{ c.creditos }}</td>
         <td>{{ c.activo }}</td>
         <td>{{ c.fecha }}</td>
-        <td *ngIf="canEdit(c)">
-          <button (click)="editCourse(c)">✏️ Editar</button>
-          <button (click)="deleteCourse(c.id)">🗑️ Eliminar</button>
+
+        <td>
+          <!-- 🔹 Solo ADMIN puede editar/eliminar -->
+          <div *ngIf="roles.includes('ADMIN')">
+            <button (click)="editCourse(c)">✏️ Editar</button>
+            <button (click)="deleteCourse(c.id)">🗑️ Eliminar</button>
+          </div>
+
+          <!-- 🔹 Solo TEACHER puede asignarse -->
+          <div *ngIf="roles.includes('TEACHER')">
+            <button (click)="assignTeacher(c.id)">👨‍🏫 Asignarme como profesor</button>
+          </div>
+
+          <!-- 🔹 Solo STUDENT puede inscribirse -->
+          <div *ngIf="roles.includes('STUDENT')">
+            <button (click)="enroll(c.id)">📘 Inscribirme</button>
+          </div>
         </td>
       </tr>
     </tbody>

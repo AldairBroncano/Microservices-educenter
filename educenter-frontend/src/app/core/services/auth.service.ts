@@ -132,10 +132,11 @@ export class AuthService {
     localStorage.setItem('token', token);
   }
 
-  getUserid(): number | null {
+  getUserId(): number | null {
     const payload = this.parseToken(this.getToken());
+    console.log('Payload decodificado:', payload);
     if (!payload) return null;
 
-    return payload.id || null;
+    return payload.userId || null;
   }
 }

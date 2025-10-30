@@ -65,6 +65,14 @@ public ResponseEntity<?> assignTeacherToCourse(@PathVariable Long courseId, @Pat
         return ResponseEntity.ok("Se asigno correctamente al curso");
 }
 
+    @PostMapping("/{courseId}/enroll/{studentId}")
+    public ResponseEntity<?> enrollStudentToCourse(
+            @PathVariable Long courseId,
+            @PathVariable Long studentId) {
+
+        Course updatedCourse = service.enrollStudent(courseId, studentId);
+        return ResponseEntity.ok("✅ Estudiante inscrito correctamente al curso");
+    }
 
 
 
