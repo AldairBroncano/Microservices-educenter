@@ -32,6 +32,7 @@ public class SecurityConfig {
                         .pathMatchers("/actuator/**").permitAll()
                         .pathMatchers("/api/users/**").authenticated()
                         .pathMatchers("/api/courses").permitAll()
+                        .pathMatchers("/api/courses/{courseId}/enroll/{studentId}").hasAnyRole("STUDENT")
                       .pathMatchers("/api/courses/**").hasAnyRole("TEACHER","ADMIN")
                         .pathMatchers("/api/grades/**").hasAnyRole("TEACHER","ADMIN")
                         .anyExchange().authenticated()
