@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 //@RequiredArgsConstructor
@@ -62,7 +64,12 @@ public class CourseController {
     @PostMapping("/{courseId}/assign/{teacherId}")
 public ResponseEntity<?> assignTeacherToCourse(@PathVariable Long courseId, @PathVariable Long teacherId){
        Course update =  service.assignTeacher(courseId, teacherId);
-        return ResponseEntity.ok("Se asigno correctamente al curso");
+
+       Map<String,String> response = new HashMap<>();
+
+       response.put("message" , "Se Asigno correctamente al curso");
+
+        return ResponseEntity.ok(response);
 }
 
     @PostMapping("/{courseId}/enroll/{studentId}")
@@ -71,7 +78,9 @@ public ResponseEntity<?> assignTeacherToCourse(@PathVariable Long courseId, @Pat
             @PathVariable Long studentId) {
 
         Course updatedCourse = service.enrollStudent(courseId, studentId);
-        return ResponseEntity.ok("✅ Estudiante inscrito correctamente al curso");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "✅ Estudiante inscrito correctamente al curso");
+        return ResponseEntity.ok(response);
     }
 
 

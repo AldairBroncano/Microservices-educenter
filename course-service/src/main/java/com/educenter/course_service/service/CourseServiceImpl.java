@@ -8,6 +8,7 @@ import com.educenter.course_service.repository.CourseRepository;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.User;
+import org.apache.http.protocol.HTTP;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -126,6 +127,21 @@ public class CourseServiceImpl implements CourseService{
     public Course enrollStudent(Long courseId, Long studentId) {
         Course course = repository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+
+   UserProfileDTO student = authFeignClient.getUserById(studentId);
+
+   if (student == null){
+       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El estudiante no existe");
+
+   }
+   if(student.getRole() != Role.STUDENT){
+       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El Usuario no es alumno");
+   }
+   if(course.getStudentIds().contains(studentId)){
+       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El alumno ya esta inscrito a este curso");
+   }
+
 
         // Añadir el userId a la lista de alumnos (si no existe)
         if (course.getStudentIds() == null) {

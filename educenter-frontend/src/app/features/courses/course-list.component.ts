@@ -61,26 +61,55 @@ export class CourseListComponent implements OnInit {
 
   enroll(courseId: number) {
     const userId = this.auth.getUserId();
+
     if (!userId) {
       alert('⚠️ No se pudo obtener tu usuario. Inicia sesión de nuevo.');
       return;
     }
 
-    this.cs.enroll(courseId, userId).subscribe(() => {
-      alert('✅ Te inscribiste correctamente');
+    this.cs.enroll(courseId, userId).subscribe({
+      next: (res: any) => {
+        alert(res.message || '✅ Te inscribiste correctamente.');
+      },
+      error: (err: any) => {
+        const msg = err?.error?.message?.toLowerCase?.() || err?.error?.toLowerCase?.() || '';
+
+        if (msg.includes('ya esta inscrito')) {
+          alert('⚠️ Ya estás inscrito en este curso.');
+        } else if (msg.includes('no es alumno')) {
+          alert('❌ Solo los alumnos pueden inscribirse.');
+        } else {
+          alert('❌ Error al inscribirse: ' + (err.error?.message || err.message));
+        }
+      },
     });
   }
 
   assignTeacher(courseId: number) {
     const userId = this.auth.getUserId();
+
     if (!userId) {
       alert('⚠️ No se pudo obtener tu usuario. Inicia sesión de nuevo.');
       return;
     }
 
     this.cs.assignTeacher(courseId, userId).subscribe({
-      next: () => alert('✅ Profesor asignado correctamente al curso'),
-      error: (err) => alert('❌ Error al asignar profesor: ' + err.message),
+      next: (res: any) => {
+        alert(res.message || '✅ Profesor asignado correctamente al curso.');
+      },
+      error: (err: any) => {
+        const msg = (err?.error?.message || err?.error || '').toString().toLowerCase();
+
+        if (msg.includes('ya está asignado')) {
+          alert('⚠️ Profesor ya estás asignado a este curso.');
+        } else if (msg.includes('no es profesor')) {
+          alert('❌ Solo los profesores pueden asignarse a cursos.');
+        } else if (msg.includes('no encontrado')) {
+          alert('⚠️ Curso no encontrado o inexistente.');
+        } else {
+          alert('❌ Error al asignarse: ' + (err?.error?.message || err.message));
+        }
+      },
     });
   }
 }

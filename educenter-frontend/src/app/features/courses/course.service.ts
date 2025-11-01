@@ -53,6 +53,7 @@ export class CourseService {
       {},
       {
         headers: this.getHeaders(),
+        responseType: 'text',
       }
     );
   }
