@@ -35,7 +35,7 @@
         <td>
           <!-- 🔹 Solo ADMIN puede editar/eliminar -->
           <div *ngIf="roles.includes('ADMIN')">
-            <button (click)="editCourse(c)">✏️ Editar</button>
+            <button [routerLink]="['/courses/edit', c.id]">✏️ Editar</button>
             <button (click)="deleteCourse(c.id)">🗑️ Eliminar</button>
           </div>
 
