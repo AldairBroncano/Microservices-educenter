@@ -1,1 +1,25 @@
-<p>users works!</p>
+<ng-container *ngIf="users && users.length > 0">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Email</th>
+        <th>Telefono</th>
+        <th>Rol</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let u of users">
+        <td>{{ u.id }}</td>
+        <td>{{ u.name }}</td>
+        <td>{{ u.lastName }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.phone }}</td>
+        <td>{{ u.role }}</td>
+      </tr>
+    </tbody>
+  </table>
+</ng-container>

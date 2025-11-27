@@ -36,4 +36,8 @@ export class CourseEdit {
       },
     });
   }
+
+  goback() {
+    this.router.navigate(['/courses']);
+  }
 }
