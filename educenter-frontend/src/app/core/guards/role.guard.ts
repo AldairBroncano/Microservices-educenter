@@ -7,12 +7,19 @@ export class RoleGuard implements CanActivate {
   constructor(private auth: AuthService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
-    const expectedRoles = route.data['roles'] as string[];
-    if (!this.auth.isLoggedIn() || !this.auth.hasAnyRole(expectedRoles)) {
-      // opcional: redirigir a 'access-denied'
-      this.router.navigate(['/']);
+    // 1️⃣ Primero: verificar si está logueado
+    if (!this.auth.isLoggedIn()) {
+      this.router.navigate(['/login']);
       return false;
     }
-    return true;
+
+    // 2️⃣ Luego: validar roles
+    const expectedRoles = route.data['roles'] as string[];
+    if (!this.auth.hasAnyRole(expectedRoles)) {
+      this.router.navigate(['/unauthorized']); // 👈 Página de acceso denegado
+      return false;
+    }
+
+    return true; // Puede acceder
   }
 }

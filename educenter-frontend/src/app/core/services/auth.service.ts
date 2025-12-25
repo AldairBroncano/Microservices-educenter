@@ -18,7 +18,14 @@ export class AuthService {
       tap((res) => {
         if (res && res.token) {
           this.setToken(res.token);
-          this.userSubject.next(this.parseToken(res.token));
+
+          const payload = this.parseToken(res.token);
+
+          if (payload?.role && typeof window !== 'undefined') {
+            localStorage.setItem('role', payload.role.replace(/^ROLE_/, '').toUpperCase());
+          }
+
+          this.userSubject.next(payload);
         }
       })
     );
@@ -103,21 +110,10 @@ export class AuthService {
   }
 
   getRole(): string | null {
-    const payload = this.parseToken(this.getToken());
-    if (!payload) return null;
-
-    // Nuevo backend: "role": "ADMIN"
-    if (payload.role) {
-      return String(payload.role)
-        .replace(/^ROLE_/, '')
-        .toUpperCase();
+    if (typeof window !== 'undefined') {
+      // 👈 IMPORTANTE
+      return localStorage.getItem('role');
     }
-
-    // Caso antiguo: "roles": ["ROLE_ADMIN"]
-    if (Array.isArray(payload.roles) && payload.roles.length > 0) {
-      return payload.roles[0].replace(/^ROLE_/, '').toUpperCase();
-    }
-
     return null;
   }
 
@@ -138,5 +134,20 @@ export class AuthService {
     if (!payload) return null;
 
     return payload.userId || null;
+  }
+
+  public restoreUserFromStorage(): any {
+    const token = this.getToken();
+    const payload = this.parseToken(token);
+
+    if (typeof window !== 'undefined') {
+      const storedRole = localStorage.getItem('role');
+      if (storedRole && payload) {
+        payload.role = storedRole;
+      }
+    }
+
+    this.userSubject.next(payload); // 🔥 ACTUALIZA EL ESTADO!
+    return payload;
   }
 }

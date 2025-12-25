@@ -1,7 +1,9 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserService } from './user.service';
+import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-users',
@@ -11,14 +13,22 @@ import { Router, RouterModule } from '@angular/router';
   standalone: true,
 })
 export class UsersComponent implements OnInit {
-  users: any[] = [];
+  users$!: Observable<any[]>;
+  role: string | null = null;
 
-  constructor(private userService: UserService, private cdr: ChangeDetectorRef) {}
+  constructor(private userService: UserService, private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.userService.getAllFullProfiles().subscribe((data) => {
-      this.users = data;
-      this.cdr.detectChanges(); // 👈 evita NG0100
-    });
+    // obtenemos el role de manera inmediata
+    this.role = this.authService.getRole();
+
+    if (this.isAuthorized()) {
+      // usamos observable directamente
+      this.users$ = this.userService.getAllFullProfiles();
+    }
+  }
+
+  isAuthorized(): boolean {
+    return this.role === 'ADMIN' || this.role === 'TEACHER';
   }
 }

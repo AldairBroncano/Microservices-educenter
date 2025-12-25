@@ -33,19 +33,19 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+  //  @Autowired
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private JwtProvider jwtProvider;
+    //@Autowired
+    private final JwtProvider jwtProvider;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    //@Autowired
+    private final AuthenticationManager authenticationManager;
 
 
     private final AuthService authService;
 
-    private AuthRepository repo;
+    private final AuthRepository repo;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponseDTO> registerUser(@RequestBody AuthRegisterDTO userDTO){

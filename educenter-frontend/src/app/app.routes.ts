@@ -6,15 +6,24 @@ import { AdminDashboard } from './features/dashboard/admin-dashboard/admin-dashb
 import { TeacherDashboard } from './features/dashboard/teacher-dashboard/teacher-dashboard';
 import { StudentDashboard } from './features/dashboard/student-dashboard/student-dashboard';
 import { AuthGuard } from './core/guards/auth.guard';
+import { RoleGuard } from './core/guards/role.guard';
 import { CourseEdit } from './features/courses/course-edit/course-edit.component';
 import { UsersComponent } from './features/users/users.component';
+import { Unauthorized } from './features/unauthorized/unauthorized';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'users', component: UsersComponent },
+  {
+    path: 'users',
+    component: UsersComponent,
+    canActivate: [RoleGuard, AuthGuard], // ⛔ Bloquea si no tiene rol
+    data: { roles: ['ADMIN', 'TEACHER'] },
+  },
+
+  { path: 'unauthorized', component: Unauthorized },
 
   // dashboards
   { path: 'admin-dashboard', component: AdminDashboard, canActivate: [AuthGuard] },

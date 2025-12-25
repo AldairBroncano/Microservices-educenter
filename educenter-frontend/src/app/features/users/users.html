@@ -1,5 +1,8 @@
-<ng-container *ngIf="users && users.length > 0">
-  <table class="table">
+<h2>Usuarios</h2>
+
+<!-- Mostrar tabla solo si tienes acceso -->
+<ng-container *ngIf="isAuthorized()">
+  <table class="table" *ngIf="users$ | async as users; else loading">
     <thead>
       <tr>
         <th>ID</th>
@@ -22,4 +25,8 @@
       </tr>
     </tbody>
   </table>
+
+  <ng-template #loading>
+    <p>Cargando usuarios...</p>
+  </ng-template>
 </ng-container>
