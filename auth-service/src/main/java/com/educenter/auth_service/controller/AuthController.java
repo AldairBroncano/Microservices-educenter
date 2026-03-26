@@ -1,9 +1,6 @@
 package com.educenter.auth_service.controller;
 
-import com.educenter.auth_service.dto.AuthLoginDTO;
-import com.educenter.auth_service.dto.AuthResponseDTO;
-import com.educenter.auth_service.dto.AuthRegisterDTO;
-import com.educenter.auth_service.dto.UserProfileDTO;
+import com.educenter.auth_service.dto.*;
 import com.educenter.auth_service.entity.Auth;
 import com.educenter.auth_service.enums.Role;
 import com.educenter.auth_service.mapper.AuthMapper;
@@ -18,44 +15,36 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 
 @RestController
 @RequestMapping("/api/auth")
-@RequiredArgsConstructor
+ @RequiredArgsConstructor
 public class AuthController {
 
-  //  @Autowired
-    private final PasswordEncoder passwordEncoder;
 
-    //@Autowired
+//Inyeccion de dependencia por constructor
     private final JwtProvider jwtProvider;
-
-    //@Autowired
     private final AuthenticationManager authenticationManager;
-
-
     private final AuthService authService;
 
-    private final AuthRepository repo;
+
+
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponseDTO> registerUser(@RequestBody AuthRegisterDTO userDTO){
-        Auth auth = AuthMapper.toEntity(userDTO);
-        auth.setPassword(passwordEncoder.encode(auth.getPassword()));
-        auth.setRole(Role.TEACHER);
-        Auth savedAuth = authService.saveUser(auth);
+    public ResponseEntity<AuthResponseDTO> registerUser(@RequestBody AuthRegisterDTO dto){
 
-        return ResponseEntity.ok(AuthMapper.toDTO(savedAuth));
+        AuthResponseDTO response = authService.registrar(dto);
+
+        return ResponseEntity.ok(response);
     }
+
 
     @GetMapping("/email")
    public ResponseEntity<AuthResponseDTO> getUserByEmail(@RequestParam String email){
@@ -75,73 +64,21 @@ public class AuthController {
 
    }
 
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthLoginDTO loginDTO) {
-        try {
-            // Autenticación con AuthenticationManager
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            loginDTO.getEmail(),
-                            loginDTO.getPassword()
-                    )
-            );
-
-            // Obtener el usuario autenticado (UserDetails)
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-
-            // Buscar datos extra si necesitas más que el email (como username o role)
-            Optional<Auth> optionalUser = authService.getUserByEmail(userDetails.getUsername());
-
-            if (optionalUser.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Datos del usuario no encontrados");
-            }
-
-            Auth auth = optionalUser.get();
-
-
-// 🔐 Generar el token JWT
-            String token = jwtProvider.generateToken(userDetails.getUsername() , auth.getId(), auth.getRole(), auth.getUser() ); // username = email
-            System.out.println("TOKEN GENERADO: " + token);
-
-            // 📦 Armar la respuesta
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Login exitoso");
-            response.put("token", token);
-            response.put("userId", auth.getId());
-            response.put("email", auth.getEmail());
-            response.put("username", auth.getUser());
-            response.put("role", auth.getRole());
-
-            return ResponseEntity.ok(response);
-
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales incorrectas");
-        }
-    }
+   @PostMapping("/login")
+   public ResponseEntity<AuthLoginResponseDTO>login(@RequestBody AuthLoginDTO loginDTO){
+        AuthLoginResponseDTO response = authService.login(loginDTO);
+        return ResponseEntity.ok(response);
+   }
 
 
     @GetMapping("/profile/{id}")
-    public ResponseEntity<UserProfileDTO> getUserProfile(@PathVariable Long id){
+    public ResponseEntity<UserProfileDTO> getUserProfileId(@PathVariable Long id){
         return ResponseEntity.ok(authService.getUserProfileById(id));
     }
 
 
-    @PostMapping("/profiles")
-    public ResponseEntity<List<UserProfileDTO>> getUsersProfiles(@RequestBody List<Long> ids, @RequestHeader(value = "Authorization", required = false) String authHeader ) {
-        System.out.println("AuthHeader recibido en /profiles: " + authHeader);
-        List<UserProfileDTO> profiles = repo.findAllById(ids).stream()
-                .map(user -> new UserProfileDTO(
-                        user.getId(),
-                        user.getUsername(),
-                        user.getEmail(),
-                        user.getRole()
-                ))
-                .toList();
-
-        return ResponseEntity.ok(profiles);
-    }
+    @GetMapping()
+    public List<Auth> getAll(){return authService.getUsersProfiles();}
 
 
 

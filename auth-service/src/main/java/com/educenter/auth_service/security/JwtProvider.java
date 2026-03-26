@@ -13,6 +13,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
+//En esta clase se genera, valida y extrae informacion JWT
+
 @Component
 public class JwtProvider {
 
@@ -26,8 +28,8 @@ public class JwtProvider {
 
     public String generateToken(String email, Long userId, Role role, String user) {
 
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpiration);
+        Date now = new Date(); // fecha actual
+        Date expiryDate = new Date(now.getTime() + jwtExpiration); // fecha y hora que expira
 
         Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
 

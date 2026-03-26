@@ -24,9 +24,10 @@ public class Auth implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username")
+
     private String user;
 
+    @Column(unique = true) // el email es unico
     private String email;
 
     private String password;
@@ -48,8 +49,7 @@ public class Auth implements UserDetails {
         return email;
     }
 
-
-
+    //todos los usuarios están activos siempre
 
     @Override
     public boolean isAccountNonExpired() {

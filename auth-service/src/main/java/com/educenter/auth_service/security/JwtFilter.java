@@ -14,6 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+//Es el filtro que intercepta cada request y verifica el token antes de dejar pasar
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 

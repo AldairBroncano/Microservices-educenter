@@ -1,10 +1,9 @@
 package com.educenter.auth_service.service;
 
-import com.educenter.auth_service.dto.AuthRegisterDTO;
-import com.educenter.auth_service.dto.UserProfileDTO;
+import com.educenter.auth_service.dto.*;
 import com.educenter.auth_service.entity.Auth;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface AuthService {
@@ -14,9 +13,11 @@ public interface AuthService {
     Optional<Auth> getUserById(Long id);
 
 
-    void registrar(AuthRegisterDTO dto);
+    AuthResponseDTO registrar(AuthRegisterDTO dto);
 
     UserProfileDTO getUserProfileById(Long id);
 
+    AuthLoginResponseDTO login(AuthLoginDTO dto);
 
+    List<Auth> getUsersProfiles();
 }

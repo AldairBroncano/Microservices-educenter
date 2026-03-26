@@ -16,17 +16,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+//Es la configuración que define cómo funciona la seguridad en la aplicación
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Autowired
-    private JwtFilter jwtFilter; // <-- Inyecta tu filtro
+    //valida token en cada request
+    private final JwtFilter jwtFilter; // <-- Inyecta tu filtro
 
-    @Autowired
-    private CustomAuthDetailsService customAuthDetailsService;
+    //carga usuario desde BD
+    private final CustomAuthDetailsService customAuthDetailsService;
 
 
     @Bean
@@ -35,8 +36,13 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login", "/api/auth/{id}","/api/auth/register", "/api/auth/profile/{id}").permitAll()
+                        .requestMatchers("/api/auth","/api/auth/login", "/api/auth/**","/api/auth/register", "/api/auth/profile/{id}").permitAll()
+                        .requestMatchers("/api/user/crear").permitAll()
                         .requestMatchers("/profiles").hasAnyRole("ADMIN", "STUDENT", "TEACHER") // 👈 permitir según roles
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
@@ -53,8 +59,8 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(customAuthDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setUserDetailsService(customAuthDetailsService); // llama a loadByUsername(email)
+        authProvider.setPasswordEncoder(passwordEncoder()); // compara password
         return authProvider;
     }
 

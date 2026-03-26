@@ -1,17 +1,20 @@
 package com.educenter.auth_service.service;
 
-import com.educenter.auth_service.dto.AuthRegisterDTO;
-import com.educenter.auth_service.dto.AuthResponseDTO;
-import com.educenter.auth_service.dto.UserProfileDTO;
+import com.educenter.auth_service.dto.*;
 import com.educenter.auth_service.entity.Auth;
 import com.educenter.auth_service.enums.Role;
 import com.educenter.auth_service.repository.AuthRepository;
+import com.educenter.auth_service.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -21,7 +24,9 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
-    private final RestTemplate restTemplate;
+    private final AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
+
 
 
     @Override
@@ -39,8 +44,45 @@ public class AuthServiceImpl implements AuthService {
         return authRepository.findById(id);
     }
 
+
     @Override
-    public void registrar(AuthRegisterDTO dto) {
+    public AuthLoginResponseDTO login(AuthLoginDTO dto){
+        try{
+
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            dto.getEmail(),
+                            dto.getPassword()
+                    )
+            );
+
+            Auth auth = authRepository.findByEmail(dto.getEmail())
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+            String token = jwtProvider.generateToken(
+                    auth.getEmail(),
+                    auth.getId(),
+                    auth.getRole(),
+                    auth.getUser()
+            );
+
+            return new AuthLoginResponseDTO(
+                    token,
+                    auth.getId(),
+                    auth.getEmail(),
+                    auth.getRole()
+            );
+        }catch (Exception e){
+            throw new RuntimeException("Credenciales incorrectas");
+        }
+
+
+    }
+
+
+
+    @Override
+    public AuthResponseDTO registrar(AuthRegisterDTO dto) {
 
         Auth auth = new Auth();
 
@@ -51,10 +93,15 @@ public class AuthServiceImpl implements AuthService {
 
         Auth savedUser = authRepository.save(auth);
 
-        AuthResponseDTO perfil = new AuthResponseDTO(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail());
-        restTemplate.postForObject("http://localhost:8082/api/user/crear", perfil, Void.class);
+        AuthResponseDTO perfil = new AuthResponseDTO(
+                savedUser.getId(),
+                savedUser.getUsername(),
+                savedUser.getEmail()
+        );
 
 
+
+        return perfil;
     }
 
 
@@ -65,6 +112,17 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
         return new UserProfileDTO(user.getId(), user.getUsername(), user.getEmail(), user.getRole());
     }
+
+    @Override
+    public List<Auth> getUsersProfiles() {
+        return authRepository.findAll();
+    }
+
+
+
+
+
+
 
 
 }
