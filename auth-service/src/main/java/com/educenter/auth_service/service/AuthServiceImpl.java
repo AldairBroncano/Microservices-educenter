@@ -3,6 +3,7 @@ package com.educenter.auth_service.service;
 import com.educenter.auth_service.dto.*;
 import com.educenter.auth_service.entity.Auth;
 import com.educenter.auth_service.enums.Role;
+import com.educenter.auth_service.mapper.AuthMapper;
 import com.educenter.auth_service.repository.AuthRepository;
 import com.educenter.auth_service.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -84,24 +85,15 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponseDTO registrar(AuthRegisterDTO dto) {
 
-        Auth auth = new Auth();
+        //USAR MAPPER
+        Auth auth = AuthMapper.toEntity(dto);
 
-        auth.setUser(dto.getUser());
-        auth.setEmail(dto.getEmail());
         auth.setPassword(passwordEncoder.encode(dto.getPassword()));
         auth.setRole(Role.STUDENT);
 
         Auth savedUser = authRepository.save(auth);
 
-        AuthResponseDTO perfil = new AuthResponseDTO(
-                savedUser.getId(),
-                savedUser.getUsername(),
-                savedUser.getEmail()
-        );
-
-
-
-        return perfil;
+        return AuthMapper.toDTO(savedUser);
     }
 
 
