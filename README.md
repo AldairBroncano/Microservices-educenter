@@ -31,31 +31,38 @@ El sistema está dividido en microservicios independientes para autenticación, 
 Microservices
 
 ```
-                ┌──────────────────────┐
-                │     Angular App      │
-                │      Frontend        │
-                └──────────┬───────────┘
-                           │
-                           ▼
-                ┌──────────────────────┐
-                │    API Gateway       │
-                │   Spring Cloud GW    │
-                └──────────┬───────────┘
-                           │
-        ┌──────────────────┼──────────────────┐
-        │                  │                  │
-        ▼                  ▼                  ▼
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│ auth-service │  │ user-service │  │ grade-service│
-│ JWT Security │  │ Users CRUD   │  │ Grades CRUD  │
-└──────┬───────┘  └──────┬───────┘  └──────┬───────┘
-       │                 │                 │
-       └─────────────────┼─────────────────┘
-                         ▼
-              ┌──────────────────┐
-              │   Eureka Server  │
-              │ Service Discovery│
-              └──────────────────┘
+             
+                   ┌──────────────────────┐
+                   │     Angular App      │
+                   │      Frontend        │
+                   └──────────┬───────────┘
+                              │
+                              ▼
+                   ┌──────────────────────┐
+                   │     API Gateway      │
+                   │   Spring Cloud GW    │
+                   └──────────┬───────────┘
+                              │
+                              ▼
+
+            ┌──────────────────────────────────────┐
+            │            Microservices             │
+            └──────────────────────────────────────┘
+
+ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+ │ auth-service │ │ user-service │ │course-service│ │grade-service │
+ │ JWT Security │ │  Users CRUD  │ │ Courses CRUD │ │ Grades CRUD  │
+ └──────┬───────┘ └──────┬───────┘ └──────┬───────┘ └──────┬───────┘
+        │                │                │                │
+        └────────────────┴────────────────┴────────────────┘
+                              │
+                              ▼
+
+                  ┌────────────────────────┐
+                  │     Eureka Server      │
+                  │   Service Discovery    │
+                  └────────────────────────┘   
+
 
 ```
 
