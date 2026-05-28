@@ -15,7 +15,9 @@ Actualmente el sistema utiliza Eureka Server para descubrimiento de servicios y 
 EDUCENTER permite gestionar diferentes funcionalidades académicas según el tipo de usuario:
 
 ADMIN → administración general del sistema
+
 TEACHER → gestión de cursos y calificaciones
+
 STUDENT → visualización de cursos y notas
 
 El sistema está dividido en microservicios independientes para autenticación, usuarios, cursos y notas, permitiendo una arquitectura más modular y escalable.
