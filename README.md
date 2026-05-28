@@ -83,5 +83,5 @@ para pruebas funcionales básicas.
 ```
 ## 👨‍💻 Autor
 
-**Aldair Broncano** - Microservices . Java Backend . · JWT Security · API Gateway
+**Aldair Broncano** - Microservices · Java Backend · JWT Security · API Gateway
 
